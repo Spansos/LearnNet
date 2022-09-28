@@ -1,23 +1,23 @@
-#ifndef NNT_NEURALNET_H
-#define NNT_NEURALNET_H
+#ifndef NT_NEURALNET_H
+#define NT_NEURALNET_H
 
-typedef struct nnt_neuron_t NntNeuron;
-typedef struct nnt_layer_t NntLayer;
+typedef struct nn_neuron_t nnNeuron;
+typedef struct nn_layer_t nnLayer;
 
-typedef struct nnt_network_t {
+typedef struct nn_network_t {
     int layerc;
-    NntLayer **layers;
+    nnLayer **layers;
     double (*activation_func)(double);
-} NntNetwork;
+} nnNetwork;
 
-Network *NntCreateNetwork(int *layersizes, int layerc, double (*activation_func)(double));
-void NntInitRandom(NntNetwork *net, double w, double b);
-void NntCalcNetwork(NntNetwork *net);
-void NntFreeNetwork(NntNetwork *net);
-void NntSetNetworkInput(NntNetwork *net, double *values, int valuec, int start_neuron);
-int NntGetNetworkOutput(NntNetwork *net, double **values);
-int NntGetNetworkSize(NntNetwork *net, int **layersizes);
-Network *NntAddNetworks(NntNetwork *net1, NntNetwork *net2);
-void NntMultNetwork(NntNetwork *net, double x);
+nnNetwork *nnCreateNetwork(int *layersizes, int layerc, double (*activation_func)(double));
+void nnInitRandom(nnNetwork *net, double w, double b);
+void nnCalcNetwork(nnNetwork *net);
+void nnFreeNetwork(nnNetwork *net);
+void nnSetNetworkInput(nnNetwork *net, double *values, int valuec, int start_neuron);
+int nnGetNetworkOutput(nnNetwork *net, double **values);
+int nnGetNetworkSize(nnNetwork *net, int **layersizes);
+nnNetwork *nnAddNetworks(nnNetwork *net1, nnNetwork *net2);
+void nnMultNetwork(nnNetwork *net, double x);
 
 #endif

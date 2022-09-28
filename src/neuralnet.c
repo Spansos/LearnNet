@@ -38,7 +38,7 @@ nnLayer *nnCreateLayer(int size, nnLayer *prev_layer) {
     nnLayer *layer = malloc(sizeof(nnLayer));
     nnNeuron **neurons = malloc(size * sizeof(nnNeuron*));
     for (int i=0; i<size; i++) {
-        neurons[i] = create_neuron(prev_layer);
+        neurons[i] = nnCreateNeuron(prev_layer);
     }
     layer->neuronc = size;
     layer->neurons = neurons;
@@ -47,14 +47,14 @@ nnLayer *nnCreateLayer(int size, nnLayer *prev_layer) {
 
 
 // makes a new network
-nnNetwork *ntCreateNetwork(int *layersizes, int layerc, double (*activation_func)(double)) {
+nnNetwork *nnCreateNetwork(int *layersizes, int layerc, double (*activation_func)(double)) {
     if (activation_func==NULL) {
         activation_func = &sigmoid;
     }
     nnNetwork *net = malloc(sizeof(nnNetwork));
     nnLayer **layers = malloc(layerc * sizeof(nnLayer*));
     for (int i=0; i<layerc; i++) {
-        layers[i] = create_layer(layersizes[i], (i>0) ? layers[i-1] : NULL);
+        layers[i] = nnCreateLayer(layersizes[i], (i>0) ? layers[i-1] : NULL);
     }
     net->activation_func = activation_func;
     net->layerc = layerc;
@@ -64,7 +64,7 @@ nnNetwork *ntCreateNetwork(int *layersizes, int layerc, double (*activation_func
 
 
 // assign random values of [-1/2w, 1/2w] to the weights and [-1/2b, 1/2b] to the biases of a network
-void init_random(nnNetwork *net, double w, double b) {
+void nnInitRandom(nnNetwork *net, double w, double b) {
     for (int i=0; i < net->layerc; i++) {
         for (int j=0; j < net->layers[i]->neuronc; j++) {
             nnNeuron *neuron = net->layers[i]->neurons[j];
@@ -77,7 +77,7 @@ void init_random(nnNetwork *net, double w, double b) {
 }
 
 // frees all memory of a network
-void free_network(nnNetwork *net) {
+void nnFreeNetwork(nnNetwork *net) {
     for (int i=0; i<net->layerc; i++) {
         for (int j=0; j<net->layers[i]->neuronc; j++) {
             free(net->layers[i]->neurons[j]->weights);
@@ -93,7 +93,7 @@ void free_network(nnNetwork *net) {
 
 // sets network's first layer to values. length of values must be the same as first layer
 // starts at start_neuron (first is 0).
-void set_network_input(nnNetwork *net, double *values, int valuec, int start_neuron) {
+void nnSetNetworkInput(nnNetwork *net, double *values, int valuec, int start_neuron) {
     for (int i=0; i < valuec; i++) {
         net->layers[0]->neurons[start_neuron + i]->out = values[i];
     }
@@ -101,7 +101,7 @@ void set_network_input(nnNetwork *net, double *values, int valuec, int start_neu
 
 
 // returns outs of last layer
-int get_network_output(nnNetwork *net, double **values) {
+int nnGetNetworkOutput(nnNetwork *net, double **values) {
     nnLayer *layer = net->layers[net->layerc-1];
 
     *values = malloc(layer->neuronc * sizeof(double));
@@ -114,7 +114,7 @@ int get_network_output(nnNetwork *net, double **values) {
 
 
 // returns the number of layers directly and the sizes of the layers by refrence
-int get_network_size(nnNetwork *net, int **layersizes) {
+int nnGetNetworkSize(nnNetwork *net, int **layersizes) {
     *layersizes = malloc(net->layerc * sizeof(int));
     for (int i=0; i < net->layerc; i++) {
         (*layersizes)[i] = net->layers[i]->neuronc;
@@ -124,7 +124,7 @@ int get_network_size(nnNetwork *net, int **layersizes) {
 
 
 // calculates all neurons' out
-void calc_network(nnNetwork *net) {
+void nnCalcNetwork(nnNetwork *net) {
     for (int i=1; i < net->layerc; i++) {
         nnLayer *prev_layer = net->layers[i-1];
         nnLayer *cur_layer = net->layers[i];
@@ -144,12 +144,12 @@ void calc_network(nnNetwork *net) {
 
 
 // makes a new network by adding two others
-nnNetwork *add_networks(nnNetwork *net1, nnNetwork *net2) {
+nnNetwork *nnAddNetworks(nnNetwork *net1, nnNetwork *net2) {
     // Check if the networks have the same shape, return NULL if not
     int *layersizes1;
     int *layersizes2;
-    int layerc1 = get_network_size(net1, &layersizes1);
-    int layerc2 = get_network_size(net2, &layersizes2);
+    int layerc1 = nnGetNetworkSize(net1, &layersizes1);
+    int layerc2 = nnGetNetworkSize(net2, &layersizes2);
     if (layerc1 != layerc2) {
         return NULL;
     }
@@ -160,7 +160,7 @@ nnNetwork *add_networks(nnNetwork *net1, nnNetwork *net2) {
     }
 
     // network that will be returned
-    nnNetwork *r_net = create_network(layersizes1, layerc1, NULL);
+    nnNetwork *r_net = nnCreateNetwork(layersizes1, layerc1, NULL);
 
     // add all weigths and biases for all matching neurons
     for (int i=0; i<net1->layerc; i++) {
@@ -180,7 +180,7 @@ nnNetwork *add_networks(nnNetwork *net1, nnNetwork *net2) {
 
 
 // multiplies all biases and weights in a network
-void mult_network(nnNetwork *net, double x) {
+void nnMultNetwork(nnNetwork *net, double x) {
     for (int i=0; i < net->layerc; i++) {
         for (int j=0; j < net->layers[i]->neuronc; j++) {
             nnNeuron *neuron = net->layers[i]->neurons[j];

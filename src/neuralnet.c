@@ -8,13 +8,13 @@ typedef struct nnt_neuron_t {
     double bias;
     double *weights;
     int weightc;
-} Neuron;
+} NntNeuron;
 
 
 typedef struct nnt_layer_t {
     int neuronc;
-    Neuron **neurons;
-} Layer;
+    NntNeuron **neurons;
+} NntLayer;
 
 
 // sigmoid function, binds a value between 0 and 1, standard activation func
@@ -47,7 +47,7 @@ Layer *NntCreateLayer(int size, Layer *prev_layer) {
 
 
 // makes a new network
-Network *create_network(int *layersizes, int layerc, double (*activation_func)(double)) {
+NntNetwork *NntCreateNetwork(int *layersizes, int layerc, double (*activation_func)(double)) {
     if (activation_func==NULL) {
         activation_func = &sigmoid;
     }

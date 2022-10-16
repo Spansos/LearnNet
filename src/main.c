@@ -1,5 +1,5 @@
 #include <SFML/Graphics.h>
-#include <NeuralLib/arithmatic.h>
+#include <NeuralLib/network_t.h>
 
 int main() {
     

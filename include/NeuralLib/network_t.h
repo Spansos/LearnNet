@@ -20,11 +20,7 @@ typedef struct nn_network_t {
 } nnNetwork;
 
 nnNetwork *nnCreateNetwork(int *layersizes, int layerc, double (*activation_func)(double));
-void nnCalcNetwork(nnNetwork *net);
 void nnFreeNetwork(nnNetwork *net);
-void nnSetNetworkInput(nnNetwork *net, double *values, int valuec, int start_neuron);
-int nnGetNetworkOutput(nnNetwork *net, double **values);
-int nnGetNetworkSize(nnNetwork *net, int **layersizes);
 
 
 #endif

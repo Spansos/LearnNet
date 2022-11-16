@@ -9,4 +9,4 @@ obj/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $^ -I include -o $@
 
 bin/main: $(OBJFILES)
-	$(CC) $(CFLAGS) $^ $(wildcard libs/*) -o $@
+	$(CC) $(CFLAGS) $^ -L $(wildcard libs/*) -o $@

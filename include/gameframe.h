@@ -2,9 +2,10 @@
 #define GAMEFRAME_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef struct game_state_t {
-    char state[1024];
+    uint8_t state[256];
     double net_in[64];
     double score;
     bool game_ended;

@@ -1,7 +1,7 @@
 #ifndef NN_ARITHMATIC_H
 #define NN_ARITHMATIC_H
 
-#include <network_t.h>
+#include <NeuralLib/network_t.h>
 
 void nnInitRandom(nnNetwork *net, double w, double b);
 int nnGetNetworkSize(nnNetwork *net, int **layersizes);

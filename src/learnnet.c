@@ -1,6 +1,6 @@
 #include <learnnet.h>
 #include <stdlib.h>
-#include <calc.h>
+#include <NeuralLib/calc.h>
 
 LearnNet *CreateLearnNet(int memoryc, int *layersizes, int layerc, double (*activation_func)(double)) {
     LearnNet *lnet = malloc(sizeof(LearnNet));
@@ -45,4 +45,13 @@ int GetLearnNetOutput(LearnNet *learnNet, double **values) {
     }
 
     return valneurc;
+}
+
+void FreeNetMemory(LearnNet *learnnet) {
+    nnLayer *inlayer = learnnet->neuralnet->layers[0];
+    nnLayer *outlayer = learnnet->neuralnet->layers[learnnet->neuralnet->layerc-1];
+    for (int i=0; i < learnnet->memoryc; i++) {
+        inlayer->neurons[i]->out = 0;
+        outlayer->neurons[i]->out = 0;
+    }
 }

@@ -4,7 +4,7 @@
 
 
 int main() {
-    sfRenderWindow * window = sfRenderWindow_create((sfVideoMode){600, 400}, "Test", sfDefaultStyle, sfContextDefault);
+    sfRenderWindow * window = sfRenderWindow_create((sfVideoMode){800, 600}, "Test", sfDefaultStyle, sfContextDefault);
 
     Game *lander = lander_game_type();
     GameState *state = lander->new_game_func();

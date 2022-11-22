@@ -13,9 +13,9 @@ void gen_terrain(uint8_t *state) {
         new_height = (new_height < 0) ? 0 : new_height;
         state[100+i] = new_height;
     }
-    int flatn = rand()%10;
-    state[101+flatn] = state[100 + flatn];
-    state[102+flatn] = state[100 + flatn];
+    int flatn = (rand()%14) + 1;
+    state[100+flatn] = state[101 + flatn];
+    state[102+flatn] = state[101 + flatn];
 }
 
 
@@ -23,8 +23,8 @@ GameState* new_lander_game() {
     GameState *gamestate = calloc(1, sizeof(GameState));
     uint8_t *state = gamestate->state;
     gen_terrain(state);
-    state[0] = 15*8/2;
-    state[1] = 48;
+    state[0] = 15*8/2+32;
+    state[1] = 48+32;
     state[2] = 128;
     state[3] = 128;
     state[4] = 0;
@@ -51,7 +51,7 @@ sfRenderTexture *render_lander(uint8_t *state) {
     sfConvexShape_setPoint(lander, 0, (sfVector2f){0, -4});
     sfConvexShape_setPoint(lander, 1, (sfVector2f){4, 4});
     sfConvexShape_setPoint(lander, 2, (sfVector2f){-4, 4});
-    sfConvexShape_setPosition(lander, (sfVector2f){state[0], state[1]});
+    sfConvexShape_setPosition(lander, (sfVector2f){state[0]-32, state[1]-32});
     sfConvexShape_setRotation(lander, (float)state[4]/256*360);
 
 
@@ -71,45 +71,38 @@ void update_lander(GameState* gamestate, double input[6]) {
     if (gamestate->game_ended) {return;}
 
     if (round(input[0])) {
-        state[4] -= 2;
+        state[4] -= 4;
     }
     if (round(input[1])) {
-        state[4] += 2;
+        state[4] += 4;
     }
     if (round(input[2])) {
-        uint8_t d_x = (uint8_t)(sinf((float)state[4]/256*2*3.14) * 12);
-        uint8_t d_y = (uint8_t)(cosf((float)state[4]/256*2*3.14) * 12);
-        state[2] += state[2] > 255-d_x ? 255-state[3] : d_x;
-        state[3] -= state[2] > 255-d_y ? 255-state[3] : d_y;
+        int d_x = (sinf((float)state[4]/256*2*3.14) * 12);
+        int d_y = (cosf((float)state[4]/256*2*3.14) * 12);
+        d_x = state[2]+d_x > 255 ? 255 : d_x;
+        d_x = state[2]+d_x < 0 ? 0 : d_x;
+        d_y = state[3]-d_y > 255 ? 255 : d_y;
+        d_y = state[3]-d_y < 0 ? 0 : d_y;
+        state[2] += d_x;
+        state[3] -= d_y;
     }
 
     state[3] += state[3] > 255-4 ? 255-state[3] : 4;
     state[0] += (state[2]-128)>>4;
     state[1] += (state[3]-128)>>4;
 
+    if (state[0]-32 > 120 || state[0]-32 < 0) {gamestate->game_ended = true;}
+    if (state[1]-32 > 128 || state[1]-32 < 0) {gamestate->game_ended = true;}
 
-    // memmove(&state[7], &state[5], state[2]*2);
-    // state[5] = state[7] + move.x;
-    // state[6] = state[8] + move.y;
+    int index = (state[0]-32-4)/8;
+    index = index < 0 ? 0 : index;
+    index = index > 13 ? 13 : index;
+    uint8_t land_terrain[3] = {state[100+index], state[101+index], state[102+index]};
+    printf("%i,\t%I32d,\t%I32d,\t%I32d\n", index, land_terrain[0], land_terrain[1], land_terrain[2]);
 
-    // if (state[5] == state[0] && state[6] == state[1]) {
-    //     gamestate->score += 32;
-    //     state[2]++;
-    //     state[0] = rand()%8;
-    //     state[1] = rand()%8;
-    // }
-
-
-    // if (state[5] < 0 || state[5] > 7 || state[6] < 0 || state[6] > 7) {
-    //     gamestate->game_ended = true;
-    //     return;
-    // }
-    // for (int i=0; i < state[2]-1; i++) {
-    //     if (state[5] == state[7+i*2] && state[6] == state[8+i*2]) {
-    //         gamestate->game_ended = true;
-    //         return;
-    //     }
-    // }
+    float d1 = land_terrain[0]-land_terrain[1];
+    float d2 = land_terrain[1]-land_terrain[2];
+    
 
 
     // gamestate->score++;
@@ -122,5 +115,5 @@ void update_lander(GameState* gamestate, double input[6]) {
 
 
 Game *lander_game_type() {
-    return new_game(new_lander_game, update_lander, render_lander, 30);
+    return new_game(new_lander_game, update_lander, render_lander, 20);
 }

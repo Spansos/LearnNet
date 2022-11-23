@@ -94,16 +94,34 @@ void update_lander(GameState* gamestate, double input[6]) {
     if (state[0]-32 > 120 || state[0]-32 < 0) {gamestate->game_ended = true;}
     if (state[1]-32 > 128 || state[1]-32 < 0) {gamestate->game_ended = true;}
 
-    int index = (state[0]-32-4)/8;
-    index = index < 0 ? 0 : index;
-    index = index > 13 ? 13 : index;
-    uint8_t land_terrain[3] = {state[100+index], state[101+index], state[102+index]};
-    printf("%i,\t%I32d,\t%I32d,\t%I32d\n", index, land_terrain[0], land_terrain[1], land_terrain[2]);
+    int index = state[0]/8;
+    float d = state[101+index]-state[100+index];
 
-    float d1 = land_terrain[0]-land_terrain[1];
-    float d2 = land_terrain[1]-land_terrain[2];
+    printf("%i,\t%f,\t%f\n", index, d, (float)-(state[index]-32) + d * ((state[0]-32)%8));
+    if ((float)state[index] - d * (float)(state[0]%8) < state[1]) {
+        printf("1\n");
+    }
+
+
+    // int index = (state[0]-32-4)/8;
+    // index = index < 0 ? 0 : index;
+    // index = index > 13 ? 13 : index;
+    // uint8_t land_terrain[3] = {state[100+index], state[101+index], state[102+index]};
+
+    // float d1 = land_terrain[0]-land_terrain[1];
+    // float d2 = land_terrain[1]-land_terrain[2];
     
-
+    // printf("%i,\t%i,\t%i,\t%i,\t,%lf,\t%lf", index, land_terrain[0], land_terrain[1], land_terrain[2], d1, d2);
+    // if (fabsf(d1-d2) < 2 && fabsf(d1) < 8 && fabsf(d2) < 8) {
+    //     // gen_terrain(state);
+    //     // state[0] = 15*8/2+32;
+    //     // state[1] = 48+32;
+    //     // state[2] = 128;
+    //     // state[3] = 128;
+    //     // state[4] = 0;
+    //     printf("\tTrue");
+    // }
+    // printf("\n");
 
     // gamestate->score++;
     // for (int i=0; i<64; i++) {gamestate->net_in[i] = 0;}

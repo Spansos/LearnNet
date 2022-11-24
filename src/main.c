@@ -1,13 +1,13 @@
 #include <SFML/Graphics.h>
 #include <NeuralLib/network_t.h>
-#include <lander.h>
+#include <flap.h>
 
 
 int main() {
     sfRenderWindow * window = sfRenderWindow_create((sfVideoMode){800, 600}, "Test", sfDefaultStyle, sfContextDefault);
 
-    Game *lander = lander_game_type();
-    GameState *state = lander->new_game_func();
+    Game *flap = flap_game_type();
+    GameState *state = flap->new_game_func();
 
     sfSprite *sprite = sfSprite_create();
     sfSprite_setPosition(sprite, (sfVector2f){0,0});
@@ -20,8 +20,8 @@ int main() {
             }
         }
         
-        lander->update_func(state, (double[]){sfKeyboard_isKeyPressed(sfKeyLeft), sfKeyboard_isKeyPressed(sfKeyRight), sfKeyboard_isKeyPressed(sfKeyUp), sfKeyboard_isKeyPressed(sfKeyDown), 0., 0.});
-        sfRenderTexture *game_r_text = lander->render_game(state->state);
+        flap->update_func(state, (double[]){sfKeyboard_isKeyPressed(sfKeyLeft), sfKeyboard_isKeyPressed(sfKeyRight), sfKeyboard_isKeyPressed(sfKeyUp), sfKeyboard_isKeyPressed(sfKeyDown), 0., 0.});
+        sfRenderTexture *game_r_text = flap->render_game(state->state);
         sfTexture *game_text = sfRenderTexture_getTexture(game_r_text);
 
         sfSprite_setTexture(sprite, game_text, sfFalse);
@@ -30,7 +30,7 @@ int main() {
         sfRenderWindow_drawSprite(window, sprite, NULL);
         sfRenderWindow_display(window);
 
-        sfSleep((sfTime){.microseconds = 1000000 * (1/lander->framerate - sfTime_asSeconds(sfClock_getElapsedTime(clock)))});
+        sfSleep((sfTime){.microseconds = 1000000 * (1/flap->framerate - sfTime_asSeconds(sfClock_getElapsedTime(clock)))});
         sfClock_restart(clock);
     }
 }

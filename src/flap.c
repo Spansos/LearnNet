@@ -88,32 +88,25 @@ void update_flap(GameState* gamestate, double input[6]) {
         }
         top.height = state[10+i*2];
         top.top = 0;
-        top.left = state[9+i*2];
+        top.left = state[9+i*2] - 16;
         bot.height = 64-state[10+i*2]-24;
         bot.top = 64-bot.height;
-        bot.left = state[9+i*2];
+        bot.left = state[9+i*2] - 16;
 
         if (sfFloatRect_intersects(&bird, &top, NULL) || sfFloatRect_intersects(&bird, &bot, NULL)) {
             gamestate->game_ended = true;
         }
     }
-    
-
-    // if (state[5] < 0 || state[5] > 7 || state[6] < 0 || state[6] > 7) {
-    //     gamestate->game_ended = true;
-    //     return;
-    // }
-    // for (int i=0; i < state[2]-1; i++) {
-    //     if (state[5] == state[7+i*2] && state[6] == state[8+i*2]) {
-    //         gamestate->game_ended = true;
-    //         return;
-    //     }
-    // }
-
 
     gamestate->score++;
 
-    // gamestate->net_in[state[0] + state[1] * 8] = 1;
+    gamestate->net_in[0] = *(float*)&state[0];
+    gamestate->net_in[1] = *(float*)&state[4];
+    gamestate->net_in[2] = state[8];
+    gamestate->net_in[3] = state[9];
+    gamestate->net_in[4] = state[10];
+    gamestate->net_in[5] = state[11];
+    for (int i=6; i < 64; i++) {gamestate->net_in[i] = 0;}
 }
 
 

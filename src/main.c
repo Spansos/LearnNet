@@ -24,7 +24,7 @@ int main() {
     games[3] = tritis_game_type();
     curGame = games[0];
 
-    int layersizes[] = {66, 64, 32, 6};
+    int layersizes[] = {65, 48, 32, 6};
     for (int i=0; i < 100; i++) {
         nets[i] = CreateLearnNet(64, layersizes, 4, NULL);
         gamestates[i] = curGame->new_game_func();
@@ -43,7 +43,6 @@ int main() {
         }
 
         update();
-
         render(window);
         sfRenderWindow_display(window);
         
@@ -55,7 +54,18 @@ int main() {
 
 void update() {
     for (int i=0; i < 100; i++) {
-        curGame->update_func(gamestates[i], (double[6]){0, 0, sfKeyboard_isKeyPressed(sfKeySpace), 0, 0, 0});
+        SetLearnNetInput(nets[i], gamestates[i]->net_in, 64, 0);
+        double fscore = (double)gamestates[i]->score;
+        SetLearnNetInput(nets[i], &fscore, 1, 64);
+
+        CalcLearnNet(nets[i]);
+
+        double *inputs;
+        GetLearnNetOutput(nets[i], &inputs);
+
+        curGame->update_func(gamestates[i], inputs);
+
+        free(inputs);
 
         if (gamestates[i]->game_ended) {
             free_gamestate(gamestates[i]);

@@ -94,5 +94,5 @@ void update_snake(GameState* gamestate, double input[6]) {
 
 
 Game *snake_game_type() {
-    return new_game(new_snake_game, update_snake, render_snake, 2.);
+    return new_game(new_snake_game, update_snake, render_snake, 2, 8*16, 8*16);
 }

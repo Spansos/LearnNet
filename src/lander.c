@@ -144,5 +144,5 @@ void update_lander(GameState* gamestate, double input[6]) {
 
 
 Game *lander_game_type() {
-    return new_game(new_lander_game, update_lander, render_lander, 20);
+    return new_game(new_lander_game, update_lander, render_lander, 20, 15*8, 128);
 }

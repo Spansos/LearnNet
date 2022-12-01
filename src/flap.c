@@ -111,5 +111,5 @@ void update_flap(GameState* gamestate, double input[6]) {
 
 
 Game *flap_game_type() {
-    return new_game(new_flap_game, update_flap, render_flap, 10);
+    return new_game(new_flap_game, update_flap, render_flap, 10, 64, 64);
 }

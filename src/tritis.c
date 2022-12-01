@@ -149,5 +149,5 @@ void update_tritis(GameState* gamestate, double input[6]) {
 
 
 Game *tritis_game_type() {
-    return new_game(new_tritis_game, update_tritis, render_tritis, 4.);
+    return new_game(new_tritis_game, update_tritis, render_tritis, 4, 5*16, 10*16);
 }

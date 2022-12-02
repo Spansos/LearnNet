@@ -24,9 +24,11 @@ void FreeLearnNet(LearnNet *learnNet) {
 void CalcLearnNet(LearnNet *learnNet) {
     nnLayer *inlayer = learnNet->neuralnet->layers[0];
     nnLayer *outlayer = learnNet->neuralnet->layers[learnNet->neuralnet->layerc-1];
+
     for (int i=0; i < learnNet->memoryc; i++) {
         inlayer->neurons[i]->out = outlayer->neurons[i]->out;
     }
+
     nnCalcNetwork(learnNet->neuralnet);
 }
 
@@ -47,7 +49,7 @@ int GetLearnNetOutput(LearnNet *learnNet, double **values) {
     return valneurc;
 }
 
-void FreeNetMemory(LearnNet *learnnet) {
+void ResetNetMemory(LearnNet *learnnet) {
     nnLayer *inlayer = learnnet->neuralnet->layers[0];
     nnLayer *outlayer = learnnet->neuralnet->layers[learnnet->neuralnet->layerc-1];
     for (int i=0; i < learnnet->memoryc; i++) {

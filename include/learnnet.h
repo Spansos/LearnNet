@@ -12,7 +12,7 @@ LearnNet *CreateLearnNet(int memoryc, int *layersizes, int layerc, double (*acti
 void CalcLearnNet(LearnNet *learnNet);
 void FreeLearnNet(LearnNet *learnNet);
 void SetLearnNetInput(LearnNet *learnNet, double *values, int valuec, int start_neuron);
-void FreeNetMemory(LearnNet *learnnet);
+void ResetNetMemory(LearnNet *learnnet);
 int GetLearnNetOutput(LearnNet *learnNet, double **values);
 int GetLearnNetSize(LearnNet *learnNet, int **layersizes);
 

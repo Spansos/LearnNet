@@ -15,6 +15,5 @@ Game *new_game(GameState *(*new_game_func)(), void (*update_func)(GameState*, do
 
 
 void free_gamestate(GameState *gamestate) {
-    free(gamestate->state);
     free(gamestate);
 }

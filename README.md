@@ -1,0 +1,1 @@
+Tried to make and train a neural network to learn, IE, train a neural network to itself make out small bits of logic and handle itself in unknown situations. Never worked, may not even compile, but it was interesting.
